@@ -1,6 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitUp", "GitUp\GitUp.csproj", "{323525E7-BBF6-4D88-8F96-640CB3C466FB}"
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30907.101
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitUp", "GitUp\GitUp.csproj", "{323525E7-BBF6-4D88-8F96-640CB3C466FB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7E49BE88-393A-4318-B142-845404F15BFA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -12,5 +17,11 @@ Global
 		{323525E7-BBF6-4D88-8F96-640CB3C466FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{323525E7-BBF6-4D88-8F96-640CB3C466FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{323525E7-BBF6-4D88-8F96-640CB3C466FB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5C2D0C9B-F006-499C-9D79-AE769000E0C3}
 	EndGlobalSection
 EndGlobal

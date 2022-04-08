@@ -1,0 +1,172 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>GitUp</name>
+    </assembly>
+    <members>
+        <member name="T:GitUp.Controllers.ClickUpApiClient">
+            <summary>
+            Отвечает за формирование запросов к API ClickUp
+            </summary>
+        </member>
+        <member name="F:GitUp.Controllers.ClickUpApiClient.ApiUrl">
+            <summary>
+            Адрес API ClickUp
+            </summary>
+        </member>
+        <member name="F:GitUp.Controllers.ClickUpApiClient.PersonalApiToken">
+            <summary>
+            Пользовательский токен
+            </summary>
+        </member>
+        <member name="M:GitUp.Controllers.ClickUpApiClient.#ctor(System.String)">
+            <summary>
+            Конструктор
+            </summary>
+            <param name="personalApiToken">Пользовательский токен</param>
+        </member>
+        <member name="M:GitUp.Controllers.ClickUpApiClient.PrepareHeaders(System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            Подготавливает заголовки для запросов в ClickUp
+            </summary>
+            <param name="additionalHeaders"></param>
+            <returns></returns>
+        </member>
+        <member name="M:GitUp.Controllers.ClickUpApiClient.GetTask(System.String)">
+            <summary>
+            Получить данные о задаче
+            </summary>
+            <param name="taskId">Идентификатор задачи</param>
+            <returns>Задача</returns>
+        </member>
+        <member name="M:GitUp.Controllers.ClickUpApiClient.CreateCheckList(System.String,System.String)">
+            <summary>
+            Выполняет создание чеклиста в задаче
+            </summary>
+            <param name="checkListName">Название чек-листа. Может быть не уникальным</param>
+            <param name="taskId">Идентификатор задачи</param>
+        </member>
+        <member name="M:GitUp.Controllers.ClickUpApiClient.CreateCheckListItem(System.String,System.String,GitUp.Models.Clickup.Assignee)">
+            <summary>
+            Создание пункта в чеклисте
+            </summary>
+            <remarks>
+                Пример формируемой ссылки:
+                https://api.clickup.com/api/v2/checklist/checklist_id/checklist_item
+                При отправке запрос передается следующее тело запроса:
+                <code>
+                    {
+                        "name": "Checklist Item",
+                        "assignee": 546
+                    }
+                </code>
+            </remarks>
+            <param name="checkListId">Идентификатор чеклиста</param>
+            <param name="checkListItemName">Название пункта чеклиста</param>
+            <param name="assignee">Ответственный за пункт чеклиста</param>
+        </member>
+        <member name="M:GitUp.Controllers.ClickUpApiClient.SendGetRequestToClickUpApi(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            Подготавливает и выполняет GET запрос в ClickUp 
+            </summary>
+            <remarks>
+                Пример формируемой ссылки:
+                https://api.clickup.com/api/v2/task/task_id
+            </remarks>
+            <param name="entityName">Название сущности, информация по которой будет запрошена</param>
+            <param name="entityId">Идентификатор сущности</param>
+            <param name="additionalHeaders">Дополнительные заголовки запроса</param>
+            <returns></returns>
+        </member>
+        <member name="M:GitUp.Controllers.ClickUpApiClient.SendPostRequestToClickUpApi(System.String,System.String,System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            Подготавливает и выполняет POST запрос в ClickUp 
+            </summary>
+            <remarks>
+                Пример формируемой ссылки:
+                https://api.clickup.com/api/v2/list/list_id/task
+            </remarks>
+            <param name="entityName">Название родительской сущности, которая осуществляет связь</param>
+            <param name="entityId">Идентификатор родительской сущности</param>
+            <param name="additionalHeaders">Дополнительные заголовки запроса</param>
+            <param name="postAction">Действие/название сущности, с которой будут выполняться действия</param>
+            <returns></returns>
+        </member>
+        <member name="M:GitUp.Controllers.ClickUpApiClient.ConvertDictionaryToJson(System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            Выполняет преобразование справочника в JSON
+            </summary>
+            <param name="dictionary">Справочник</param>
+            <returns>JSON-строка</returns>
+        </member>
+        <member name="T:GitUp.Controllers.WebRequester">
+            <summary>
+            Класс для выполнения POST запросов
+            </summary>
+        </member>
+        <member name="P:GitUp.Controllers.WebRequester.Url">
+            <summary>
+            Адрес удаленного сервера
+            </summary>
+        </member>
+        <member name="M:GitUp.Controllers.WebRequester.#ctor(System.String)">
+            <summary>
+            Конструктор
+            </summary>
+            <param name="url">Адрес удаленного сервера</param>
+        </member>
+        <member name="M:GitUp.Controllers.WebRequester.PostRequest(System.String,System.Int32,System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            Выполняет POST запрос к удаленному серверу
+            </summary>
+            <param name="data">Данные для передачи</param>
+            <param name="timeout">Таймаут для выполнения запроса</param>
+            <param name="additionalHeaders">Дополнительные заголовки</param>
+            <returns></returns>
+        </member>
+        <member name="M:GitUp.Controllers.WebRequester.GetRequest(System.Int32,System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            Выполняет GET запрос к удаленному серверу
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:GitUp.Interfaces.IApiClient">
+            <summary>
+            Описывает интерфейс взаимодействия с API ClickUp
+            </summary>
+        </member>
+        <member name="M:GitUp.Interfaces.IApiClient.GetTask(System.String)">
+            <summary>
+            Получить данные о задаче
+            </summary>
+            <param name="taskId">Идентификатор задачи</param>
+            <returns>Задача</returns>
+        </member>
+        <member name="M:GitUp.Interfaces.IApiClient.CreateCheckList(System.String,System.String)">
+            <summary>
+            Выполняет создание чеклиста в задаче
+            </summary>
+            <param name="checkListName">Название чек-листа. Может быть не уникальным</param>
+            <param name="taskId">Идентификатор задачи</param>
+        </member>
+        <member name="M:GitUp.Interfaces.IApiClient.CreateCheckListItem(System.String,System.String,GitUp.Models.Clickup.Assignee)">
+            <summary>
+            Создание пункта в чеклисте
+            </summary>
+            <remarks>
+                Пример формируемой ссылки:
+                https://api.clickup.com/api/v2/checklist/checklist_id/checklist_item
+                При отправке запрос передается следующее тело запроса:
+                <code>
+                    {
+                        "name": "Checklist Item",
+                        "assignee": 546
+                    }
+                </code>
+            </remarks>
+            <param name="checkListId">Идентификатор чеклиста</param>
+            <param name="checkListItemName">Название пункта чеклиста</param>
+            <param name="assignee">Ответственный за пункт чеклиста</param>
+        </member>
+    </members>
+</doc>
