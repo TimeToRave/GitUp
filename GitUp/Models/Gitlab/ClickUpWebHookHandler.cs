@@ -11,7 +11,14 @@ namespace GitUp.Models.Gitlab
 		private readonly string ApiToken;
 		public ClickUpWebHookHandler(string apiToken)
 		{
-			ApiToken = apiToken;
+			if (apiToken is object && apiToken.Length > 0)
+			{
+				ApiToken = apiToken;
+			} 
+			else
+			{
+				throw new Exception("Invalid API token");
+			}
 		}
 
 
