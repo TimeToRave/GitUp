@@ -39,6 +39,15 @@
             <param name="taskId">Идентификатор задачи</param>
             <returns>Задача</returns>
         </member>
+        <member name="M:GitUp.Controllers.ClickUpApiClient.GetCheckList(System.String,System.String)">
+            <summary>
+            Выполняет проверку на наличие
+            чеклиста в задаче
+            </summary>
+            <param name="taskId">Идентификатор задачи</param>
+            <param name="checkListName">Название чеклиста</param>
+            <returns>Чеклист</returns>
+        </member>
         <member name="M:GitUp.Controllers.ClickUpApiClient.CreateCheckList(System.String,System.String)">
             <summary>
             Выполняет создание чеклиста в задаче
@@ -98,6 +107,24 @@
             </summary>
             <param name="dictionary">Справочник</param>
             <returns>JSON-строка</returns>
+        </member>
+        <member name="M:GitUp.Controllers.ClickUpApiClient.AddCheckListItemToTask(System.String,System.String,System.String)">
+            <summary>
+            Создает пункт чеклиста
+            </summary>
+            <param name="taskId">Идентификатор задачи</param>
+            <param name="checkListName">Название чеклиста в задаче</param>
+            <param name="checkListItemName">Новый пункт чеклиста</param>
+        </member>
+        <member name="M:GitUp.Controllers.ClickUpApiClient.CreateChecklistIfNotExitsts(System.String,System.String)">
+            <summary>
+            Выполняет проверку наличия чеклиста в задаче
+            Если чеклист с таким именем отсутсвтует, 
+            то создает его
+            </summary>
+            <param name="taskId">Идентификатор зачачи</param>
+            <param name="checkListName">Название чеклиста</param>
+            <returns>Чеклист</returns>
         </member>
         <member name="T:GitUp.Controllers.WebRequester">
             <summary>
@@ -167,6 +194,33 @@
             <param name="checkListId">Идентификатор чеклиста</param>
             <param name="checkListItemName">Название пункта чеклиста</param>
             <param name="assignee">Ответственный за пункт чеклиста</param>
+        </member>
+        <member name="M:GitUp.Interfaces.IApiClient.CreateChecklistIfNotExitsts(System.String,System.String)">
+            <summary>
+            Выполняет проверку наличия чеклиста в задаче
+            Если чеклист с таким именем отсутсвтует, 
+            то создает его
+            </summary>
+            <param name="taskId">Идентификатор зачачи</param>
+            <param name="checkListName">Название чеклиста</param>
+            <returns>Чеклист</returns>
+        </member>
+        <member name="M:GitUp.Interfaces.IApiClient.GetCheckList(System.String,System.String)">
+            <summary>
+            Выполняет проверку на наличие
+            чеклиста в задаче
+            </summary>
+            <param name="taskId">Идентификатор задачи</param>
+            <param name="checkListName">Название чеклиста</param>
+            <returns>Чеклист</returns>
+        </member>
+        <member name="M:GitUp.Interfaces.IApiClient.AddCheckListItemToTask(System.String,System.String,System.String)">
+            <summary>
+            Создает пункт чеклиста
+            </summary>
+            <param name="taskId">Идентификатор задачи</param>
+            <param name="checkListName">Название чеклиста в задаче</param>
+            <param name="checkListItemName">Новый пункт чеклиста</param>
         </member>
     </members>
 </doc>
