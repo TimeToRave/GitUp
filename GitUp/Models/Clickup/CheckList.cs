@@ -1,5 +1,6 @@
 ﻿using GitUp.Interfaces;
 using Newtonsoft.Json;
+using System;
 
 namespace GitUp.Models.Clickup
 {
@@ -32,6 +33,15 @@ namespace GitUp.Models.Clickup
         // [JsonProperty("items")]
         // public List<object> Items;
 
-        
-    }
+        public static Checklist Deserialize(string json)
+        {
+            Checklist checklist = JsonConvert.DeserializeObject<Checklist>(json);
+            return checklist;
+        }
+
+		internal bool IsNullOrEmpty()
+		{
+            return Id is null;
+		}
+	}
 }

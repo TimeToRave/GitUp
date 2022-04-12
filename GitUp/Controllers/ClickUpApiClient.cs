@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using GitUp.Interfaces;
 using GitUp.Models.Clickup;
@@ -59,13 +60,38 @@ namespace GitUp.Controllers
             Task task = Task.Deserialize(response);
             return task;
         }
-        
+
+        /// <summary>
+        /// Выполняет проверку на наличие
+        /// чеклиста в задаче
+        /// </summary>
+        /// <param name="taskId">Идентификатор задачи</param>
+        /// <param name="checkListName">Название чеклиста</param>
+        /// <returns>Чеклист</returns>
+        public Checklist GetCheckList(string taskId, string checkListName)
+        {
+            Task task = GetTask(taskId);
+
+            Checklist checkList = new Checklist();
+
+            if (task is not null && task.Checklists.Count > 0) {
+                var result =  task.Checklists.Where(checklist => string.Equals(checklist.Name.ToUpper(), checkListName.ToUpper())).FirstOrDefault();
+                if(result is not null)
+				{
+                    checkList = result;
+				}
+            }
+
+            return checkList;
+        }
+
+
         /// <summary>
         /// Выполняет создание чеклиста в задаче
         /// </summary>
         /// <param name="checkListName">Название чек-листа. Может быть не уникальным</param>
         /// <param name="taskId">Идентификатор задачи</param>
-        public void CreateCheckList(string checkListName, string taskId)
+        public Checklist CreateCheckList(string checkListName, string taskId)
         {
             Dictionary<string, string> bodyDict = new Dictionary<string, string>
             {
@@ -73,27 +99,31 @@ namespace GitUp.Controllers
             };
             
             string body = ConvertDictionaryToJson(bodyDict);
-            SendPostRequestToClickUpApi("task", taskId, "checklist", body);
+            var result = SendPostRequestToClickUpApi("task", taskId, "checklist", body);
+
+            return Checklist.Deserialize(result);
+            
         }
 
-        /// <summary>
-        /// Создание пункта в чеклисте
-        /// </summary>
-        /// <remarks>
-        ///     Пример формируемой ссылки:
-        ///     https://api.clickup.com/api/v2/checklist/checklist_id/checklist_item
-        ///     При отправке запрос передается следующее тело запроса:
-        ///     <code>
-        ///         {
-        ///             "name": "Checklist Item",
-        ///             "assignee": 546
-        ///         }
-        ///     </code>
-        /// </remarks>
-        /// <param name="checkListId">Идентификатор чеклиста</param>
-        /// <param name="checkListItemName">Название пункта чеклиста</param>
-        /// <param name="assignee">Ответственный за пункт чеклиста</param>
-        public void CreateCheckListItem(string checkListId, string checkListItemName, Assignee assignee = default)
+
+		/// <summary>
+		/// Создание пункта в чеклисте
+		/// </summary>
+		/// <remarks>
+		///     Пример формируемой ссылки:
+		///     https://api.clickup.com/api/v2/checklist/checklist_id/checklist_item
+		///     При отправке запрос передается следующее тело запроса:
+		///     <code>
+		///         {
+		///             "name": "Checklist Item",
+		///             "assignee": 546
+		///         }
+		///     </code>
+		/// </remarks>
+		/// <param name="checkListId">Идентификатор чеклиста</param>
+		/// <param name="checkListItemName">Название пункта чеклиста</param>
+		/// <param name="assignee">Ответственный за пункт чеклиста</param>
+		public void CreateCheckListItem(string checkListId, string checkListItemName, Assignee assignee = default)
         {
             Dictionary<string, string> bodyDict = new Dictionary<string, string>
             {
@@ -162,6 +192,48 @@ namespace GitUp.Controllers
         {
             return JsonConvert.SerializeObject(dictionary);
         }
-        
-    }
+
+        /// <summary>
+        /// Создает пункт чеклиста
+        /// </summary>
+        /// <param name="taskId">Идентификатор задачи</param>
+        /// <param name="checkListName">Название чеклиста в задаче</param>
+        /// <param name="checkListItemName">Новый пункт чеклиста</param>
+		public void AddCheckListItemToTask(string taskId, string checkListName, string checkListItemName)
+		{
+            Task task = GetTask(taskId);
+            if (task == null)
+            {
+                throw new Exception("Task not found");
+            }
+
+            Checklist checklist = task.GetChecklist(checkListName);
+            if (checklist == null)
+            {
+                throw new Exception("Check list not found");
+            }
+
+            CreateCheckListItem(checklist.Id, checkListItemName, task.Assignees[0]);
+        }
+
+        /// <summary>
+        /// Выполняет проверку наличия чеклиста в задаче
+        /// Если чеклист с таким именем отсутсвтует, 
+        /// то создает его
+        /// </summary>
+        /// <param name="taskId">Идентификатор зачачи</param>
+        /// <param name="checkListName">Название чеклиста</param>
+        /// <returns>Чеклист</returns>
+        public Checklist CreateChecklistIfNotExitsts(string taskId, string checkListName)
+		{
+            Checklist checkList = GetCheckList(taskId, checkListName);
+
+            if (checkList.IsNullOrEmpty())
+            {
+                checkList = CreateCheckList(taskId, checkListName);
+            }
+
+            return checkList;
+        }
+	}
 }
