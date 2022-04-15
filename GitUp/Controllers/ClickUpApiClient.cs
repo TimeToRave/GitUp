@@ -91,7 +91,7 @@ namespace GitUp.Controllers
         /// </summary>
         /// <param name="checkListName">Название чек-листа. Может быть не уникальным</param>
         /// <param name="taskId">Идентификатор задачи</param>
-        public Checklist CreateCheckList(string checkListName, string taskId)
+        public Checklist CreateCheckList(string taskId, string checkListName)
         {
             Dictionary<string, string> bodyDict = new Dictionary<string, string>
             {
@@ -101,7 +101,7 @@ namespace GitUp.Controllers
             string body = ConvertDictionaryToJson(bodyDict);
             var result = SendPostRequestToClickUpApi("task", taskId, "checklist", body);
 
-            return Checklist.Deserialize(result);
+            return CheckListResponse.Deserialize(result).Checklist;
             
         }
 
