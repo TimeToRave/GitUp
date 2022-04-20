@@ -31,12 +31,12 @@ namespace GitUp.Models.Gitlab
 				string commitInfo = commit.Message.Replace(taskIdWithBrackets, string.Empty) + "   " + commit.Url;
 
 				string taskId = taskIdWithBrackets.Replace("[", String.Empty).Replace("]", String.Empty);
-				Checklist checkList = CreateChecklistIfNotExitsts(checkListName, taskId);
+				Checklist checkList = CreateChecklistIfNotExists(checkListName, taskId);
 				AddCheckListItemToTask(taskId, checkList.Name, commitInfo);
 			}
 		}
 
-		private Checklist CreateChecklistIfNotExitsts(string checkListName, string taskId)
+		private Checklist CreateChecklistIfNotExists(string checkListName, string taskId)
 		{
 			IApiClient clickup = new ClickUpApiClient(ApiToken);
 			return clickup.CreateChecklistIfNotExitsts(taskId, checkListName);
@@ -56,7 +56,7 @@ namespace GitUp.Models.Gitlab
 		private void AddCheckListItemToTask(string taskId, string checkListName, string checkListItemName)
 		{
 			IApiClient clickup = new ClickUpApiClient(ApiToken);
-			clickup.AddCheckListItemToTask(taskId, checkListName, checkListItemName);
+			clickup.AddUniqueCheckListItemToTask(taskId, checkListName, checkListItemName);
 		}
 
 	}
