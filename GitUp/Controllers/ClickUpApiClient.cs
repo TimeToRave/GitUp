@@ -138,7 +138,45 @@ namespace GitUp.Controllers
             string body = ConvertDictionaryToJson(bodyDict);
             SendPostRequestToClickUpApi("checklist", checkListId, "checklist_item", body);
         }
-        
+
+        /// <summary>
+        /// Создание "уникального" пункта в чеклисте, который не повторялся ранее
+        /// </summary>
+        /// <remarks>
+        ///     Пример формируемой ссылки:
+        ///     https://api.clickup.com/api/v2/checklist/checklist_id/checklist_item
+        ///     При отправке запрос передается следующее тело запроса:
+        ///     <code>
+        ///         {
+        ///             "name": "Checklist Item",
+        ///             "assignee": 546
+        ///         }
+        ///     </code>
+        /// </remarks>
+        /// <param name="taskId">Идентификатор чеклиста</param>
+        /// <param name="checkListId">Идентификатор чеклиста</param>
+        /// <param name="checkListItemName">Название пункта чеклиста</param>
+        /// <param name="assignee">Ответственный за пункт чеклиста</param>
+        public void CreateUniqueCheckListItem(string taskId, string checkListId, string checkListItemName, Assignee assignee = default)
+        {
+            Task task = GetTask(taskId);
+
+            Checklist checkList = task.Checklists.Where(checklist => checklist.Id == checkListId).FirstOrDefault();
+            if(!(checkList is object))
+			{
+                throw new Exception("Check list not found");
+            }
+
+            var searchItem = checkList.Items.Where(item => item.Name.Equals(checkListItemName)).FirstOrDefault();
+            if(searchItem is object)
+			{
+                return;
+			}
+
+            CreateCheckListItem(checkListId, checkListItemName, assignee);
+        }
+
+
         /// <summary>
         /// Подготавливает и выполняет GET запрос в ClickUp 
         /// </summary>
@@ -215,6 +253,30 @@ namespace GitUp.Controllers
 
             CreateCheckListItem(checklist.Id, checkListItemName, task.Assignees[0]);
         }
+
+        /// <summary>
+        /// Создает пункт чеклиста
+        /// </summary>
+        /// <param name="taskId">Идентификатор задачи</param>
+        /// <param name="checkListName">Название чеклиста в задаче</param>
+        /// <param name="checkListItemName">Новый пункт чеклиста</param>
+		public void AddUniqueCheckListItemToTask(string taskId, string checkListName, string checkListItemName)
+        {
+            Task task = GetTask(taskId);
+            if (task == null)
+            {
+                throw new Exception("Task not found");
+            }
+
+            Checklist checklist = task.GetChecklist(checkListName);
+            if (checklist == null)
+            {
+                throw new Exception("Check list not found");
+            }
+
+            CreateUniqueCheckListItem(taskId, checklist.Id, checkListItemName, task.Assignees[0]);
+        }
+
 
         /// <summary>
         /// Выполняет проверку наличия чеклиста в задаче

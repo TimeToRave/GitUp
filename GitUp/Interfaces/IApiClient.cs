@@ -66,5 +66,27 @@ namespace GitUp.Interfaces
         /// <param name="checkListName">Название чеклиста в задаче</param>
         /// <param name="checkListItemName">Новый пункт чеклиста</param>
         void AddCheckListItemToTask(string taskId, string checkListName, string checkListItemName);
-	}
+
+        /// <summary>
+        /// Создание пункта в чеклисте, который не повторялся бы ранее
+        /// </summary>
+        /// <remarks>
+        ///     Пример формируемой ссылки:
+        ///     https://api.clickup.com/api/v2/checklist/checklist_id/checklist_item
+        ///     При отправке запрос передается следующее тело запроса:
+        ///     <code>
+        ///         {
+        ///             "name": "Checklist Item",
+        ///             "assignee": 546
+        ///         }
+        ///     </code>
+        /// </remarks>
+        /// <param name="taskId">Идентификатор чеклиста</param>
+        /// <param name="checkListId">Идентификатор чеклиста</param>
+        /// <param name="checkListItemName">Название пункта чеклиста</param>
+        /// <param name="assignee">Ответственный за пункт чеклиста</param>
+        public void AddUniqueCheckListItemToTask(string taskId, string checkListName, string checkListItemName);
+
+
+    }
 }
